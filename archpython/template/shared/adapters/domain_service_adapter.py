@@ -1,0 +1,7 @@
+from abc import ABC, abstractmethod
+
+
+class DomainService(ABC):
+    @abstractmethod
+    def process(self, *args, **kwargs):
+        raise NotImplementedError("Método process deve ser implementado")

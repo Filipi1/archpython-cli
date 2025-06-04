@@ -1,0 +1,5 @@
+from src.modules.shared.adapters import InfraService
+
+class {{ service_name }}Service(InfraService):
+    def process(self, input: {{ request_dto }}) -> {{ response_dto }}:
+        pass 

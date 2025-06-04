@@ -1,0 +1,23 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "archpython-cli"
+version = "0.1.0"
+description = "CLI para geração de serviços em arquitetura limpa"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "typer>=0.16.0",
+    "jinja2>=3.1.6",
+    "rich>=13.7.0",
+]
+
+[project.scripts]
+archpython = "archpython.main:app"
+
+[project.optional-dependencies]
+dev = [
+    "black>=25.1.0",
+]
