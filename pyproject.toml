@@ -12,6 +12,8 @@ dependencies = [
     "typer>=0.16.0",
     "jinja2>=3.1.6",
     "rich>=13.7.0",
+    "build>=1.2.2.post1",
+    "twine>=6.1.0",
 ]
 
 [project.scripts]
@@ -21,3 +23,6 @@ archpython = "archpython.main:app"
 dev = [
     "black>=25.1.0",
 ]
+
+[tool.hatch.build.targets.wheel]
+packages = ["archpython"]
