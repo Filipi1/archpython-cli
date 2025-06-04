@@ -1,6 +1,6 @@
 from src.modules.shared.adapters import ApplicationService
 
-class {{ service_name }}Service(ApplicationService):
+class {{ service_name }}ApplicationService(ApplicationService):
     def process(self, input: {{ request_dto }}) -> {{ response_dto }}:
         # TODO: Implementar lógica do serviço
         pass 

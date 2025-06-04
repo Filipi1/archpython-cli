@@ -42,6 +42,40 @@ class ModuleManager:
     def get_module_path(self, module_name: str) -> Path:
         return self.base_path / module_name
 
+    def check_shared_module(self) -> bool:
+        shared_path = self.base_path / "shared"
+        return shared_path.exists()
+
+
+class SharedModuleGenerator:
+    def __init__(self, base_path: Path = Path("src/modules")):
+        self.base_path = base_path
+        self.shared_path = base_path / "shared"
+        self.adapters_path = self.shared_path / "adapters"
+        
+        # Configurar ambiente Jinja2
+        template_dir = Path(__file__).parent / "template"
+        self.env = Environment(loader=FileSystemLoader(template_dir))
+
+    def generate(self) -> None:
+        # Criar diretórios
+        self.adapters_path.mkdir(parents=True, exist_ok=True)
+
+        # Gerar arquivos dos adaptadores
+        adapter_files = [
+            "domain_service_adapter.py",
+            "application_service_adapter.py",
+            "infra_service_adapter.py",
+            "__init__.py"
+        ]
+
+        for file in adapter_files:
+            template = self.env.get_template(f"shared/adapters/{file[:-3]}.j2")
+            content = template.render()
+            (self.adapters_path / file).write_text(content)
+
+        console.print("[bold green]✅ Módulo shared criado com sucesso![/bold green]")
+
 
 class DTOGenerator:
     def __init__(self, module_path: Path, service_name: str, service_type: str):
@@ -247,11 +281,26 @@ def generate_module(name: str):
     console.print("[bold green]✅ Módulo criado com sucesso![/bold green]")
 
 
+@app.command("init")
+def init_shared():
+    try:
+        shared_generator = SharedModuleGenerator()
+        shared_generator.generate()
+    except Exception as e:
+        console.print(f"[bold red]{str(e)}[/bold red]")
+        return
+
+
 @app.command("s")
 def generate_service():
     try:
-        config = get_service_config()
+        # Verificar se o módulo shared existe
         module_manager = ModuleManager()
+        if not module_manager.check_shared_module():
+            console.print("[yellow]⚠️ Módulo shared não encontrado. Criando...[/yellow]")
+            init_shared()
+
+        config = get_service_config()
         module_path = module_manager.get_module_path(config.module)
         
         request_class = ""
